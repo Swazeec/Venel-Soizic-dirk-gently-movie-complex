@@ -1,10 +1,10 @@
 -- Dans le terminal de xampp, pour se connecter à la bdd :
 -- mysql -h localhost -u root -p
--- password vide (dans mon cas)
+-- password vide (dans mon cas, en local, pour l'exercice. Pour un vrai projet, j'aurais mis un mdp fort.)
 
 -- ***** CREATION BDD *****
 
-CREATE DATABASE IF NOT EXISTS movieTheatersComplex DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS movieTheatersComplex DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;
 
 USE movieTheatersComplex;
 SET default_storage_engine = InnoDB;
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS admin_theaters (
 CREATE TABLE IF NOT EXISTS rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    nb_places INT(3) NOT NULL,
+    nb_places INT NOT NULL,
     movieTheater_id INT NOT NULL,
     FOREIGN KEY (movieTheater_id) REFERENCES movieTheaters(id)
     ) engine = InnoDB;
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS paymentType(
 
 CREATE TABLE IF NOT EXISTS states(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    state VARCHAR(20) NOT NULL
+    state VARCHAR(40) NOT NULL
 ) engine = InnoDB;
 
 CREATE TABLE IF NOT EXISTS prices(
@@ -251,16 +251,16 @@ SELECT DISTINCT movies.name
 FROM movies
     JOIN sessions ON movies.id = sessions.movie_id
     JOIN rooms ON sessions.room_id = rooms.id
-    JOIN movietheaters ON movietheaters.id = rooms.movieTheater_id
+    JOIN movieTheaters ON movieTheaters.id = rooms.movieTheater_id
 WHERE movieTheater_id = 1;
 
 -- Afficher la liste des films disponibles à une date donnée, avec infos de date, heure, salle, cinéma et ville
 
-SELECT sessions.date, sessions.hour, movies.name AS movie, rooms.name AS room, movietheaters.name AS movietheater, movietheaters.city AS city
+SELECT sessions.date, sessions.hour, movies.name AS movie, rooms.name AS room, movieTheaters.name AS movieTheater, movieTheaters.city AS city
 FROM movies
     JOIN sessions ON sessions.movie_id = movies.id
     JOIN rooms ON sessions.room_id = rooms.id
-    JOIN movietheaters ON movietheaters.id = rooms.movieTheater_id
+    JOIN movieTheaters ON movieTheaters.id = rooms.movieTheater_id
 WHERE sessions.date = '2022-03-28';
 
 -- Afficher le nombre de places réservées pour une séance VS le nombre de place total
@@ -297,12 +297,12 @@ WHERE id = 7 AND client_id = 15 ;
 
 -- Créer un compte admin
 
-CREATE USER 'coffeeAllMighty'@'localhost' IDENTIFIED BY 'TeaIsEvil666';
+CREATE USER 'coffeeAllMighty'@'localhost' IDENTIFIED BY 'TeaIsEvil@666';
 GRANT ALL PRIVILEGES ON movieTheatersComplex.* TO 'coffeeAllMighty'@'localhost';
 
 -- Créer un compte manager
 
-CREATE USER 'buzz'@'localhost' IDENTIFIED BY 'lightyear';
+CREATE USER 'buzz'@'localhost' IDENTIFIED BY 'light@35year';
 GRANT INSERT, UPDATE, DELETE ON movieTheatersComplex.sessions TO 'buzz'@'localhost';
 GRANT INSERT, UPDATE ON movieTheatersComplex.clients TO 'buzz'@'localhost';
 GRANT SELECT ON movieTheatersComplex.* TO 'buzz'@'localhost';
